@@ -18,22 +18,35 @@ class Album {
       questions: tQuestions,
     );
   }
+  factory Album.debug({required List<Question> questions}) {
+    return Album(questions: questions);
+  }
 }
 
 class Question {
   final int id;
   final String fileName;
   Uint8List? fileBytes;
+  String? imgText;
   final List<Answer> answers;
-  Question({required this.id, required this.fileName, required this.answers});
+  Question({required this.id, required this.fileName, required this.answers, this.imgText});
   
   factory Question.fromJson(Map<dynamic, dynamic> json) {
     List<Answer> tAnswers = [];
     for (var item in (json['averageAnswers'] as List<dynamic>)) {
       tAnswers.add(Answer.fromJson(item));
     }
-    return Question(
+    if (json['text'].toString().isEmpty) {
+      return Question(
+        id: json['id'], fileName: json['fileName'], answers: tAnswers, imgText: json['text']); //TODO check naming of field 'text'
+    } else {
+      return Question(
         id: json['id'], fileName: json['fileName'], answers: tAnswers);
+    }
+  }
+  // ignore: avoid_init_to_null
+  factory Question.debug({required int id,required String fileName,required List<Answer> answers,String? imgText}) {
+    return Question(id: id, fileName: fileName, answers: answers,imgText: imgText);
   }
 }
 
