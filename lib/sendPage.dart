@@ -12,14 +12,6 @@ class SendPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('ASApp'),
       ),
-      persistentFooterButtons: [
-        ElevatedButton(onPressed: null, child: Text('SendPage')),
-        ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/second');
-            },
-            child: Text('SearchPage')),
-      ],
       body: SendForm(),
     );
   }
