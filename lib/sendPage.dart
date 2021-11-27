@@ -9,9 +9,6 @@ class SendPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('ASApp'),
-      ),
       body: SendForm(),
     );
   }
@@ -47,19 +44,30 @@ class _SendFormState extends State<SendForm> {
               snackBar = SnackBar(
                 content: Text("You did not choose an image"),
               );
-            }
-            //  else if (_controller.value.text.trim() == "") {
-            //   snackBar = SnackBar(content: Text("You entered only picture"));
-            // } 
-            else {
+            } else {
               Question q = await sendImageDio(_imageFile!).then((q) => q);
-              String value = _controller.value.text;
-              snackBar = SnackBar(content: Text("You typed: $value"));
+              if (q.error == null) {
+                String value = _controller.value.text;
+                snackBar = SnackBar(content: Text("You typed: $value"));
+                if (_controller.value.text.trim() != "") {
+                  await sendAnswer(q.id, _controller.value.text)
+                      .whenComplete(() => null);
+                  snackBar = SnackBar(content: Text("Ответ принят"));
+                }
+              } else {
+                snackBar = SnackBar(content: Text(q.error!));
+              }
             }
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           },
           child: Text("Send data"),
         ),
+        ElevatedButton(
+            onPressed: () {
+              sendAnswer(50, "Тестирование продолжаааааается")
+                  .whenComplete(() => null);
+            },
+            child: Text("Test Button")),
       ],
     );
   }

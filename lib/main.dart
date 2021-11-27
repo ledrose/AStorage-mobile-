@@ -50,6 +50,9 @@ class _BaseWidgetState extends State<BaseWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('ASApp'),
+      ),
       body: PageView(
         controller: _pageController,
         onPageChanged: (newIndex) {

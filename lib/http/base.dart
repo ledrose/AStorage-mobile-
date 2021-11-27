@@ -29,20 +29,24 @@ class Question {
   Uint8List? fileBytes;
   String? imgText;
   final List<Answer> answers;
-  Question({required this.id, required this.fileName, required this.answers, this.imgText});
+  String? error;
+  Question({required this.id, required this.fileName, required this.answers, this.imgText, this.error});
   
   factory Question.fromJson(Map<dynamic, dynamic> json) {
     List<Answer> tAnswers = [];
     for (var item in (json['averageAnswers'] as List<dynamic>)) {
       tAnswers.add(Answer.fromJson(item));
     }
-    if (json['text'].toString().isEmpty) {
+    if (!json['text'].toString().isEmpty) {
       return Question(
         id: json['id'], fileName: json['fileName'], answers: tAnswers, imgText: json['text']); //TODO check naming of field 'text'
     } else {
       return Question(
         id: json['id'], fileName: json['fileName'], answers: tAnswers);
     }
+  }
+  factory Question.error(String errorText) {
+    return Question(answers: [],id: -1, fileName: '',error: errorText);
   }
   // ignore: avoid_init_to_null
   factory Question.debug({required int id,required String fileName,required List<Answer> answers,String? imgText}) {
