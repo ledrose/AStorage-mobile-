@@ -10,7 +10,6 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
-  
   TextEditingController _textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -20,11 +19,14 @@ class _SearchBarState extends State<SearchBar> {
         child: TextFormField(
           controller: _textController,
           decoration: InputDecoration(
-              hintText: 'Введите поисковый запрос',
-              suffixIcon: IconButton(
-                onPressed: () {createSearch();},
-                icon: Icon(Icons.arrow_forward),
-              )),
+            hintText: 'Введите поисковый запрос',
+            suffixIcon: IconButton(
+              onPressed: () {
+                createSearch();
+              },
+              icon: Icon(Icons.arrow_forward),
+            ),
+          ),
         ),
       ),
     );

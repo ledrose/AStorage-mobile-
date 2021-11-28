@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/http/imageGetter.dart';
+import 'package:flutter_application_1/http/search.dart';
 import './http/base.dart';
 import 'searchBar.dart';
 
@@ -7,7 +11,36 @@ class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: questionList(context, testAlbum)
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SearchBar(),
+          Expanded(
+            child: buildQuestionList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildQuestionList() {
+    return FutureBuilder(
+      future: createSearch(),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          case ConnectionState.done:
+            if (snapshot.hasError)
+              return Text("Error has occured." + snapshot.error.toString());
+            else
+              return questionList(context, snapshot.data as Album);
+          default:
+            return Container();
+        }
+      },
     );
   }
 
@@ -15,18 +48,40 @@ class SearchPage extends StatelessWidget {
     return Scrollbar(
       interactive: true,
       child: ListView(
-        children: [SearchBar(),
+        scrollDirection: Axis.vertical,
+        children: [
           ...alb.questions.map(
-              (e) => questionBlock(context, e, Image.asset('images/1.png'))),
-          Center(
-            child: ElevatedButton(
-                onPressed: () async {
-                  _showQuestionDialog(context, testQuestion1);
-                },
-                child: Text('Show Dialog')),
-          ),
+              (q) => buildQuestionBlock(q)),
+          // Center(
+          //   child: ElevatedButton(
+          //       onPressed: () async {
+          //         _showQuestionDialog(context, testQuestion1);
+          //       },
+          //       child: Text('Show Dialog')),
+          // ),
         ],
       ),
+    );
+  }
+
+  Widget buildQuestionBlock(Question q) {
+    return FutureBuilder(
+      future: getImage(q.id),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          case ConnectionState.done:
+            if (snapshot.hasError)
+              return Text("Error has occured." + snapshot.error.toString());
+            else
+              return questionBlock(context, q, Image.memory(snapshot.data as Uint8List));
+          default:
+            return Container();
+        }
+      },
     );
   }
 

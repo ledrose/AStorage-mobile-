@@ -37,7 +37,7 @@ class Question {
     for (var item in (json['averageAnswers'] as List<dynamic>)) {
       tAnswers.add(Answer.fromJson(item));
     }
-    if (!json['text'].toString().isEmpty) {
+    if (json['text'].toString().isNotEmpty) {
       return Question(
         id: json['id'], fileName: json['fileName'], answers: tAnswers, imgText: json['text']); //TODO check naming of field 'text'
     } else {
