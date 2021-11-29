@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
-import './base.dart';
+import '../global_things/base.dart';
 
 String url = '$halfLink/Files/';
 Map<String, String> headers = {

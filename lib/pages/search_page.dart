@@ -1,20 +1,19 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/http/imageGetter.dart';
+import 'package:flutter_application_1/http/image_getter.dart';
 import 'package:flutter_application_1/http/search.dart';
 import 'package:flutter_application_1/http/sender.dart';
-import './http/base.dart';
+import '../global_things/base.dart';
 
 class SearchPage extends StatefulWidget {
-  SearchPage({Key? key}) : super(key: key);
+  const SearchPage({Key? key}) : super(key: key);
 
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
-  TextEditingController _textController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget searchBar() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.0),
+      margin: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Form(
         child: TextFormField(
           controller: _textController,
@@ -42,7 +41,7 @@ class _SearchPageState extends State<SearchPage> {
               onPressed: () {
                 setState(() {});
               },
-              icon: Icon(Icons.arrow_forward),
+              icon: const Icon(Icons.arrow_forward),
             ),
           ),
         ),
@@ -56,14 +55,15 @@ class _SearchPageState extends State<SearchPage> {
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           case ConnectionState.done:
-            if (snapshot.hasError)
+            if (snapshot.hasError) {
               return Text("Error has occured." + snapshot.error.toString());
-            else
+            } else {
               return questionList(context, snapshot.data as Album);
+            }
           default:
             return Container();
         }
@@ -72,13 +72,13 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget questionList(BuildContext context, Album alb) {
-    if (alb.questions.length != 0) {
+    if (alb.questions.isNotEmpty) {
       return Scrollbar(
         interactive: true,
         child: RefreshIndicator(
           onRefresh: () {
             setState(() {});
-            return Future.delayed(Duration(milliseconds: 1000));
+            return Future.delayed(const Duration(milliseconds: 1000));
           },
           child: ListView(
             scrollDirection: Axis.vertical,
@@ -87,7 +87,7 @@ class _SearchPageState extends State<SearchPage> {
         ),
       );
     } else {
-      return Center(
+      return const Center(
         child: Text("Вопросов по вашему запросу не было найдено"),
       );
     }
@@ -99,17 +99,18 @@ class _SearchPageState extends State<SearchPage> {
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return Card(
+            return const Card(
               child: Center(
                 child: CircularProgressIndicator(),
               ),
             );
           case ConnectionState.done:
-            if (snapshot.hasError)
+            if (snapshot.hasError) {
               return Text("Error has occured." + snapshot.error.toString());
-            else
+            } else {
               return questionBlock(
                   context, q, Image.memory(snapshot.data as Uint8List));
+            }
           default:
             return Container();
         }
@@ -131,7 +132,7 @@ class _SearchPageState extends State<SearchPage> {
             textAlign: TextAlign.start,
           ),
           ButtonBarTheme(
-            data: ButtonBarThemeData(),
+            data: const ButtonBarThemeData(),
             child: ButtonBar(
               children: <Widget>[
                 TextButton(
@@ -153,13 +154,13 @@ class _SearchPageState extends State<SearchPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          contentPadding: EdgeInsets.only(left: 25, right: 25),
-          title: Center(
+          contentPadding: const EdgeInsets.only(left: 25, right: 25),
+          title: const Center(
             child: Text('Ответы'),
           ),
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          content: Container(
+          content: SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Scrollbar(
               interactive: true,
@@ -178,13 +179,13 @@ class _SearchPageState extends State<SearchPage> {
                   onPressed: () {
                     _showAddAnswerDialog(context, q.id);
                   },
-                  child: Text('Написать ответ'),
+                  child: const Text('Написать ответ'),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Закрыть'),
+                  child: const Text('Закрыть'),
                 ),
               ],
             ),
@@ -195,50 +196,49 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget answerList(List<Answer> ans) {
-    if (ans.isEmpty)
-      return Text(
+    if (ans.isEmpty) {
+      return const Text(
         "Никто еще не написал ответа. Стань первым.",
         textAlign: TextAlign.center,
       );
-    else
+    } else {
       return Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[...ans.map((e) => answerListElement(e))],
       );
+    }
   }
 
   Widget answerListElement(Answer ans) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Container(
+        SizedBox(
           width: double.infinity,
           child: Text(
             "Оценило ответ: " + ans.count.toString(),
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-        Container(
+        SizedBox(
           width: double.infinity,
           child: Text(
             "Ответило на вопрос: " + ans.percent.toString() + "%",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
           ),
         ),
-        Container(
-          child: Text(
-            "Данный ответ:",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+        const Text(
+          "Данный ответ:",
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        Container(
+        SizedBox(
           width: double.infinity,
           child: Text(
             ans.answer,
           ),
         ),
-        Divider(
+        const Divider(
           thickness: 3.0,
           color: Colors.blue,
         ),
@@ -252,8 +252,8 @@ class _SearchPageState extends State<SearchPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          contentPadding: EdgeInsets.only(left: 25, right: 25),
-          title: Center(
+          contentPadding: const EdgeInsets.only(left: 25, right: 25),
+          title: const Center(
             child: Text('Напишите ответ'),
           ),
           content: TextFormField(
@@ -268,17 +268,17 @@ class _SearchPageState extends State<SearchPage> {
                     sendAnswer(id, _textController.value.text.trim())
                         .whenComplete(() {
                       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Ответ отправлен")));
+                          const SnackBar(content: Text("Ответ отправлен")));
                       Navigator.of(context).pop();
                     });
                   },
-                  child: Text("Отправить ответ"),
+                  child: const Text("Отправить ответ"),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text("Закрыть"),
+                  child: const Text("Закрыть"),
                 ),
               ],
             )

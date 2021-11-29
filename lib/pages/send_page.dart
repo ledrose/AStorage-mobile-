@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/http/base.dart';
+import 'package:flutter_application_1/global_things/base.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import './http/sender.dart';
+import '../http/sender.dart';
 
 class SendPage extends StatelessWidget {
   const SendPage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: SendForm(),
     );
   }
 }
 
 class SendForm extends StatefulWidget {
-  SendForm({Key? key}) : super(key: key);
+  const SendForm({Key? key}) : super(key: key);
 
   @override
   _SendFormState createState() => _SendFormState();
@@ -30,18 +30,18 @@ class _SendFormState extends State<SendForm> {
     return Column(
       children: [
         imageTaker(),
-        SizedBox(
+        const SizedBox(
           height: 20.0,
         ),
         TextField(
           controller: _controller,
-          decoration: InputDecoration(border: OutlineInputBorder()),
+          decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         ElevatedButton(
           onPressed: () async {
             SnackBar snackBar;
             if (_imageFile == null) {
-              snackBar = SnackBar(
+              snackBar = const SnackBar(
                 content: Text("You did not choose an image"),
               );
             } else {
@@ -52,7 +52,7 @@ class _SendFormState extends State<SendForm> {
                 if (_controller.value.text.trim() != "") {
                   await sendAnswer(q.id, _controller.value.text)
                       .whenComplete(() => null);
-                  snackBar = SnackBar(content: Text("Ответ принят"));
+                  snackBar = const SnackBar(content: Text("Ответ принят"));
                 }
               } else {
                 snackBar = SnackBar(content: Text(q.error!));
@@ -60,14 +60,14 @@ class _SendFormState extends State<SendForm> {
             }
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           },
-          child: Text("Send data"),
+          child: const Text("Send data"),
         ),
         ElevatedButton(
             onPressed: () {
               sendAnswer(50, "Тестирование продолжаааааается")
                   .whenComplete(() => null);
             },
-            child: Text("Test Button")),
+            child: const Text("Test Button")),
       ],
     );
   }
@@ -79,7 +79,7 @@ class _SendFormState extends State<SendForm> {
           Image(
             height: 300.0,
             image: (_imageFile == null)
-                ? AssetImage('images/1.png')
+                ? const AssetImage('images/1.png')
                 : FileImage(File(_imageFile!.path)) as ImageProvider,
           ),
           Positioned(
@@ -92,7 +92,7 @@ class _SendFormState extends State<SendForm> {
                   builder: (builder) => bottomSheet(),
                 );
               },
-              child: Icon(
+              child: const Icon(
                 Icons.camera_alt,
                 color: Colors.teal,
                 size: 56.0,
@@ -108,19 +108,19 @@ class _SendFormState extends State<SendForm> {
     return Container(
       height: 100,
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 20,
       ),
       child: Column(
         children: <Widget>[
-          Text(
+          const Text(
             "Choose picture",
             style: TextStyle(
               fontSize: 20.0,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Row(
@@ -131,15 +131,15 @@ class _SendFormState extends State<SendForm> {
                     takePhoto(ImageSource.camera);
                     Navigator.pop(context);
                   },
-                  icon: Icon(Icons.camera),
-                  label: Text("Camera")),
+                  icon: const Icon(Icons.camera),
+                  label: const Text("Camera")),
               TextButton.icon(
                   onPressed: () {
                     takePhoto(ImageSource.gallery);
                     Navigator.pop(context);
                   },
-                  icon: Icon(Icons.image),
-                  label: Text("Gallery")),
+                  icon: const Icon(Icons.image),
+                  label: const Text("Gallery")),
             ],
           )
         ],

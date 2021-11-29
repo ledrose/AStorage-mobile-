@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/searchPage.dart';
-import 'package:flutter_application_1/sendPage.dart';
-import 'package:flutter_application_1/settingPage.dart';
+import 'package:flutter_application_1/pages/search_page.dart';
+import 'package:flutter_application_1/pages/send_page.dart';
+import 'package:flutter_application_1/pages/setting_page.dart';
 
-void main() => runApp(StartApp());
+void main() => runApp(const StartApp());
 
 class StartApp extends StatelessWidget {
   const StartApp({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class StartApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.blue,
       ),
-      home: BaseWidget(),
+      home: const BaseWidget(),
       // initialRoute: '/',
       // onGenerateRoute: RouteGenerator.generateRoute,
     );
@@ -23,7 +23,7 @@ class StartApp extends StatelessWidget {
 }
 
 class BaseWidget extends StatefulWidget {
-  BaseWidget({Key? key}) : super(key: key);
+  const BaseWidget({Key? key}) : super(key: key);
 
   @override
   State<BaseWidget> createState() => _BaseWidgetState();
@@ -31,27 +31,27 @@ class BaseWidget extends StatefulWidget {
 
 class _BaseWidgetState extends State<BaseWidget> {
   final _bottomNavigationBar = [
-    BottomNavigationBarItem(
+    const BottomNavigationBarItem(
       icon: Icon(Icons.home),
       label: "Send",
     ),
-    BottomNavigationBarItem(
+    const BottomNavigationBarItem(
       icon: Icon(Icons.comment),
       label: "Search",
     ),
-    BottomNavigationBarItem(
+    const BottomNavigationBarItem(
       icon: Icon(Icons.settings),
       label: "Settings",
     ),
   ];
 
   int _currentIndex = 0;
-  PageController _pageController = PageController(initialPage: 0);
+  final PageController _pageController = PageController(initialPage: 0);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ASApp'),
+        title: const Text('ASApp'),
       ),
       body: PageView(
         controller: _pageController,
@@ -60,7 +60,7 @@ class _BaseWidgetState extends State<BaseWidget> {
             _currentIndex = newIndex;
           });
         },
-        children: [
+        children: const [
           SendPage(),
           SearchPage(),
           SettingsPage(),
@@ -74,7 +74,7 @@ class _BaseWidgetState extends State<BaseWidget> {
           setState(() {
             _pageController.animateToPage(
               newIndex,
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
               curve: Curves.ease,
             );
           });

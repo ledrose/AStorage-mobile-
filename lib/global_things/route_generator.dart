@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import './sendPage.dart';
-import './searchPage.dart';
+import '../pages/send_page.dart';
+import '../pages/search_page.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    final args = settings.arguments;
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => SendPage());
+        return MaterialPageRoute(builder: (_) => const SendPage());
       case '/second':
-        return MaterialPageRoute(builder: (_) => SearchPage());
+        return MaterialPageRoute(builder: (_) => const SearchPage());
       default:
         return _errorRoute();
     }
@@ -19,9 +18,9 @@ class RouteGenerator {
     return MaterialPageRoute(
         builder: (_) => Scaffold(
             appBar: AppBar(
-              title: Text('Error'),
+              title: const Text('Error'),
             ),
-            body: Center(
+            body: const Center(
               child: Text('ERROR'),
             )));
   }

@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import './base.dart';
+import '../global_things/base.dart';
 import 'package:dio/dio.dart';
 
 Future<Question> sendImageDio(XFile file) async {
@@ -49,7 +48,7 @@ Future<void> sendAnswer(int id,String answer) async {
     "Authorization": key,
   };
   var response = await dio.post(
-    '/Files/${id}/Answer?answer=${answer}',
+    '/Files/$id/Answer?answer=$answer',
     options: Options(
       followRedirects: false,
       validateStatus: (status) {
