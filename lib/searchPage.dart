@@ -7,7 +7,6 @@ import 'package:flutter_application_1/http/sender.dart';
 import './http/base.dart';
 
 class SearchPage extends StatefulWidget {
-
   SearchPage({Key? key}) : super(key: key);
 
   @override
@@ -16,11 +15,6 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController _textController = TextEditingController();
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +29,7 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
+
   Widget searchBar() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.0),
@@ -80,9 +75,15 @@ class _SearchPageState extends State<SearchPage> {
     if (alb.questions.length != 0) {
       return Scrollbar(
         interactive: true,
-        child: ListView(
-          scrollDirection: Axis.vertical,
-          children: [...alb.questions.map((q) => buildQuestionBlock(q))],
+        child: RefreshIndicator(
+          onRefresh: () {
+            setState(() {});
+            return Future.delayed(Duration(milliseconds: 1000));
+          },
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            children: [...alb.questions.map((q) => buildQuestionBlock(q))],
+          ),
         ),
       );
     } else {
