@@ -5,6 +5,7 @@ String baseUrl = "https://bfs-astorage.somee.com";
 String key = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjM2FiNjNkYS1jYmU5LTRiNjQtYjlkNi0xMWM2MDdjYjNjNDUiLCJpYXQiOjE2MzMzNTM4NDgsIkNyZWF0aW9uRGF0ZXRpbWUiOiIxMC80LzIwMjEgODoyNDowOCBQTSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJhZG1pbkBtYWlsLnJ1IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRtaW5AbWFpbC5ydSIsInN1YiI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJzZWN1cml0eVN0YW1wIjoiUFhQWEZHTjVVVTNZNDJBU1JIUkVKVFFYVDdHVDVGSEgiLCJFeHBpcmVzSW4iOiIxMDAwMCIsIkNyZWF0ZVJvbGVzIjoiMSIsIkRlbGV0ZUZpbGVzIjoiMiIsIkdldExvZ3MiOiIyMDAiLCJuYmYiOjE2MzMzNTM4NDgsImV4cCI6MTY2OTM1NzQ0OCwiaXNzIjoiaHR0cHM6Ly9iZnMtYXN0b3JhZ2Uuc29tZWUuY29tLyIsImF1ZCI6IkFTdG9yYWdlX2FwaSJ9.NK_Q_715pMQFnw1B4W1-D3IQzT5XsHFQy-4D77bZ7HM";
 String halfLink = '$baseUrl/api/v$version';
 
+
 class Album {
   final List<Question> questions;
   Album({required this.questions});
@@ -39,7 +40,7 @@ class Question {
     }
     if (json['text'].toString().isNotEmpty) {
       return Question(
-        id: json['id'], fileName: json['fileName'], answers: tAnswers, imgText: json['text']); //TODO check naming of field 'text'
+        id: json['id'], fileName: json['fileName'], answers: tAnswers, imgText: json['text']); 
     } else {
       return Question(
         id: json['id'], fileName: json['fileName'], answers: tAnswers);
