@@ -127,23 +127,23 @@ class _SearchPageState extends State<SearchPage> {
             alignment: Alignment.center,
             child: img,
           ),
-          Text(
-            'Рассшифровка текста с картинки: ${q.imgText}',
-            textAlign: TextAlign.start,
-          ),
+          // Text(
+          //   'Рассшифровка текста с картинки: ${q.imgText}',
+          //   textAlign: TextAlign.start,
+          // ),
           ButtonBarTheme(
             data: const ButtonBarThemeData(),
-            child: ButtonBar(
-              children: <Widget>[
-                TextButton(
-                  onPressed: () async {
-                    _showQuestionDialog(context, q);
-                  },
-                  child: Text('Ответы ${q.answers.length}'),
-                )
-              ],
+              child: ButtonBar(
+                children: <Widget>[
+                  TextButton(
+                    onPressed: () async {
+                      _showQuestionDialog(context, q);
+                    },
+                    child: Text('Ответы ${q.answers.length}'),
+                  )
+                ],
+              ),
             ),
-          )
         ],
       ),
     );

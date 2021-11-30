@@ -4,4 +4,4 @@ enum themeNumber {
   light,
   dark,
 }
-var  currentTheme = ValueNotifier<themeNumber>(themeNumber.light);
+var currentTheme = ValueNotifier<themeNumber>(themeNumber.light);

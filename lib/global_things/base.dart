@@ -1,10 +1,40 @@
 import 'dart:typed_data';
+import 'package:dio/dio.dart';
 
-String version='1.0';
+String version = '1.0';
 String baseUrl = "https://bfs-astorage.somee.com";
-String key = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjM2FiNjNkYS1jYmU5LTRiNjQtYjlkNi0xMWM2MDdjYjNjNDUiLCJpYXQiOjE2MzMzNTM4NDgsIkNyZWF0aW9uRGF0ZXRpbWUiOiIxMC80LzIwMjEgODoyNDowOCBQTSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJhZG1pbkBtYWlsLnJ1IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRtaW5AbWFpbC5ydSIsInN1YiI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJzZWN1cml0eVN0YW1wIjoiUFhQWEZHTjVVVTNZNDJBU1JIUkVKVFFYVDdHVDVGSEgiLCJFeHBpcmVzSW4iOiIxMDAwMCIsIkNyZWF0ZVJvbGVzIjoiMSIsIkRlbGV0ZUZpbGVzIjoiMiIsIkdldExvZ3MiOiIyMDAiLCJuYmYiOjE2MzMzNTM4NDgsImV4cCI6MTY2OTM1NzQ0OCwiaXNzIjoiaHR0cHM6Ly9iZnMtYXN0b3JhZ2Uuc29tZWUuY29tLyIsImF1ZCI6IkFTdG9yYWdlX2FwaSJ9.NK_Q_715pMQFnw1B4W1-D3IQzT5XsHFQy-4D77bZ7HM";
+String key =
+    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3YjhiMDVhYy0yMDE5LTQ3MDQtYTA1My0wNDM0OTE4YWQzZDAiLCJpYXQiOjE2MzgyODgyNjcsIkNyZWF0aW9uRGF0ZXRpbWUiOiIxMS8zMC8yMDIxIDExOjA0OjI3IFBNIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6ImFkbWluQG1haWwucnUiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhZG1pbkBtYWlsLnJ1Iiwic3ViIjoiMSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMSIsInNlY3VyaXR5U3RhbXAiOiJFM0FDNzQ3R0xWNFlVVzJOUUNBTE0zMlFIWDREVVAzUSIsIkV4cGlyZXNJbiI6IjEwMDAwIiwiQ3JlYXRlUm9sZXMiOiIxIiwiRGVsZXRlRmlsZXMiOiIyIiwiR2V0TG9ncyI6IjIwMCIsIkRlbGV0ZVJvbGVzIjoiMyIsIlB1dEZpbGVzIjoiNCIsIkdldFJvbGVzIjoiNSIsIkVkaXRVc2VycyI6IjYiLCJHZXRVc2VycyI6IjciLCJBZGRVc2VycyI6IjgiLCJBZGRVc2VyVG9Sb2xlIjoiOSIsIlNlbmRFbWFpbCI6IjEwIiwibmJmIjoxNjM4Mjg4MjY3LCJleHAiOjE2NzQyODgyNjcsImlzcyI6Imh0dHBzOi8vYmZzLWFzdG9yYWdlLnNvbWVlLmNvbS8iLCJhdWQiOiJBU3RvcmFnZV9hcGkifQ.O96z5wyNiEFGHpA3SjTHa1MMNRazk8n9IpOHF5_iT_8";
 String halfLink = '$baseUrl/api/v$version';
 
+Future<Response<dynamic>> dioPost({
+  required dynamic data,
+  required String dirLink,
+  int timeout = 10000,
+  Map<String, dynamic>? headers,
+  String contentType = "application/json",
+}) async {
+  Dio dio = Dio();
+  dio.options.baseUrl = halfLink;
+  dio.options.connectTimeout = timeout;
+  dio.options.receiveTimeout = timeout;
+  dio.options.headers = headers;
+  return await dio.post(
+    dirLink,
+    data: data,
+    options: Options(
+      followRedirects: false,
+      validateStatus: (status) {
+        if (status == null) return false;
+        return status < 500;
+      },
+      contentType: contentType,
+      receiveDataWhenStatusError: true,
+      method: "POST",
+      responseType: ResponseType.json,
+    ),
+  );
+}
 
 class Album {
   final List<Question> questions;
@@ -19,9 +49,6 @@ class Album {
       questions: tQuestions,
     );
   }
-  factory Album.debug({required List<Question> questions}) {
-    return Album(questions: questions);
-  }
 }
 
 class Question {
@@ -31,8 +58,13 @@ class Question {
   String? imgText;
   final List<Answer> answers;
   String? error;
-  Question({required this.id, required this.fileName, required this.answers, this.imgText, this.error});
-  
+  Question(
+      {required this.id,
+      required this.fileName,
+      required this.answers,
+      this.imgText,
+      this.error});
+
   factory Question.fromJson(Map<dynamic, dynamic> json) {
     List<Answer> tAnswers = [];
     for (var item in (json['averageAnswers'] as List<dynamic>)) {
@@ -40,18 +72,17 @@ class Question {
     }
     if (json['text'].toString().isNotEmpty) {
       return Question(
-        id: json['id'], fileName: json['fileName'], answers: tAnswers, imgText: json['text']); 
+          id: json['id'],
+          fileName: json['fileName'],
+          answers: tAnswers,
+          imgText: json['text']);
     } else {
       return Question(
-        id: json['id'], fileName: json['fileName'], answers: tAnswers);
+          id: json['id'], fileName: json['fileName'], answers: tAnswers);
     }
   }
   factory Question.error(String errorText) {
-    return Question(answers: [],id: -1, fileName: '',error: errorText);
-  }
-  // ignore: avoid_init_to_null
-  factory Question.debug({required int id,required String fileName,required List<Answer> answers,String? imgText}) {
-    return Question(id: id, fileName: fileName, answers: answers,imgText: imgText);
+    return Question(answers: [], id: -1, fileName: '', error: errorText);
   }
 }
 

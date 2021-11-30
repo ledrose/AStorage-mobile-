@@ -10,8 +10,10 @@ Map<String, String> headers = {
 
 Future<Uint8List> getImage(int id) async {
   print("Started sending");
-  final response =
-      await http.get(Uri.parse(url + id.toString()), headers: headers);
+  final response = await http.get(
+    Uri.parse(url + id.toString()),
+    headers: headers,
+  );
   if (response.statusCode == 200) {
     print("Recieved");
     return response.bodyBytes;

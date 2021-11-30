@@ -4,13 +4,6 @@ import '../global_things/base.dart';
 import 'package:dio/dio.dart';
 
 Future<Question> sendImageDio(XFile file) async {
-  Dio dio = Dio();
-  dio.options.baseUrl = halfLink;
-  dio.options.connectTimeout = 30000;
-  dio.options.receiveTimeout = 30000;
-  dio.options.headers = {
-    "Authorization": key,
-  };
   FormData formData = FormData.fromMap({
     "File": await MultipartFile.fromFile(
       file.path,
@@ -18,20 +11,13 @@ Future<Question> sendImageDio(XFile file) async {
       contentType: MediaType("image", file.path.split(".").last),
     ),
   });
-  var response = await dio.post(
-    '/Files',
+  var response = await dioPost(
     data: formData,
-    options: Options(
-      followRedirects: false,
-      validateStatus: (status) {
-        if (status == null) return false;
-        return status < 500;
-      },
-      contentType: "multipart/form-data",
-      receiveDataWhenStatusError: true,
-      method: "POST",
-      responseType: ResponseType.json,
-    ),
+    dirLink: '/Files',
+    contentType: "multipart/form-data",
+    headers: {
+      "Authorization": key,
+    },
   );
   if (response.statusCode == 200) {
     print("Recieved");
@@ -43,25 +29,12 @@ Future<Question> sendImageDio(XFile file) async {
 }
 
 Future<void> sendAnswer(int id, String answer) async {
-  Dio dio = Dio();
-  dio.options.baseUrl = halfLink;
-  dio.options.connectTimeout = 30000;
-  dio.options.receiveTimeout = 30000;
-  dio.options.headers = {
-    "Authorization": key,
-  };
-  var response = await dio.post(
-    '/Files/$id/Answer?answer=$answer',
-    options: Options(
-      followRedirects: false,
-      validateStatus: (status) {
-        if (status == null) return false;
-        return status < 500;
-      },
-      receiveDataWhenStatusError: true,
-      method: "POST",
-      responseType: ResponseType.json,
-    ),
+  var response = await dioPost(
+    data: null,
+    dirLink: '/Files/$id/Answer?answer=$answer',
+    headers: {
+      "Authorization": key,
+    },
   );
   if (response.statusCode != 200) {
     print(response.data.toString());
