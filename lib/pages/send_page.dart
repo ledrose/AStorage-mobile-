@@ -73,7 +73,7 @@ class _SendFormState extends State<SendForm> {
           Image(
             height: 300.0,
             image: (_imageFile == null)
-                ? const AssetImage('images/1.png')
+                ? const AssetImage('images/placeholder.jpg')
                 : FileImage(File(_imageFile!.path)) as ImageProvider,
           ),
           Positioned(
