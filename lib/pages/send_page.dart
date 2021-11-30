@@ -62,12 +62,6 @@ class _SendFormState extends State<SendForm> {
           },
           child: const Text("Send data"),
         ),
-        ElevatedButton(
-            onPressed: () {
-              sendAnswer(50, "Тестирование продолжаааааается")
-                  .whenComplete(() => null);
-            },
-            child: const Text("Test Button")),
       ],
     );
   }

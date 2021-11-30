@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import '../global_things/base.dart';
 import 'package:dio/dio.dart';
@@ -12,8 +13,11 @@ Future<Question> sendImageDio(XFile file) async {
     "Authorization": key,
   };
   FormData formData = FormData.fromMap({
-    "File": await MultipartFile.fromFile(file.path,
-        filename: file.path.split('/').last),
+    "File": await MultipartFile.fromFile(
+      file.path,
+      filename: file.path.split('/').last,
+      contentType: MediaType("image", file.path.split(".").last),
+    ),
   });
   var response = await dio.post(
     '/Files',
@@ -32,14 +36,14 @@ Future<Question> sendImageDio(XFile file) async {
   );
   if (response.statusCode == 200) {
     print("Recieved");
-    return Question.fromJson(jsonDecode(response.data));
+    return Question.fromJson(response.data);
   } else {
     print("Failed");
     return Question.error("Ошибка:" + response.data.toString());
   }
 }
 
-Future<void> sendAnswer(int id,String answer) async {
+Future<void> sendAnswer(int id, String answer) async {
   Dio dio = Dio();
   dio.options.baseUrl = halfLink;
   dio.options.connectTimeout = 30000;
@@ -60,7 +64,7 @@ Future<void> sendAnswer(int id,String answer) async {
       responseType: ResponseType.json,
     ),
   );
-  if (response.statusCode!=200) {
+  if (response.statusCode != 200) {
     print(response.data.toString());
   }
 }

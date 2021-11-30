@@ -22,7 +22,13 @@ class _SearchPageState extends State<SearchPage> {
         children: [
           searchBar(),
           Expanded(
-            child: buildQuestionList(),
+            child: RefreshIndicator(
+              onRefresh: () {
+                setState(() {});
+                return Future.delayed(const Duration(milliseconds: 1000));
+              },
+              child: buildQuestionList(),
+            ),
           ),
         ],
       ),
@@ -75,15 +81,9 @@ class _SearchPageState extends State<SearchPage> {
     if (alb.questions.isNotEmpty) {
       return Scrollbar(
         interactive: true,
-        child: RefreshIndicator(
-          onRefresh: () {
-            setState(() {});
-            return Future.delayed(const Duration(milliseconds: 1000));
-          },
-          child: ListView(
-            scrollDirection: Axis.vertical,
-            children: [...alb.questions.map((q) => buildQuestionBlock(q))],
-          ),
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: [...alb.questions.map((q) => buildQuestionBlock(q))],
         ),
       );
     } else {
@@ -225,7 +225,8 @@ class _SearchPageState extends State<SearchPage> {
           width: double.infinity,
           child: Text(
             "Ответило на вопрос: " + ans.percent.toString() + "%",
-            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+            style:
+                const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
           ),
         ),
         const Text(
