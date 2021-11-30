@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
-class AppSettings {
-  ThemeData currentTheme;
-  AppSettings({required this.currentTheme});
+import 'package:flutter/foundation.dart';
+
+enum themeNumber {
+  light,
+  dark,
 }
-AppSettings currentSettings = AppSettings(currentTheme: ThemeData.light());
+var  currentTheme = ValueNotifier<themeNumber>(themeNumber.light);

@@ -14,7 +14,7 @@ class _AuthPageState extends State<AuthPage> {
       appBar: AppBar(
         title: const Text("Войдите в аккаунт"),
       ),
-      body: ListTile()
+      body: const ListTile()
     );
   }
 }

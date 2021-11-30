@@ -14,16 +14,25 @@ class StartApp extends StatefulWidget {
 }
 
 class _StartAppState extends State<StartApp> {
-  final settingNotifier = ValueNotifier(currentSettings);
+  ThemeData selectTheme(themeNumber t) {
+    switch (t.index) {
+      case 0: 
+        return ThemeData.light();
+      case 1: 
+        return ThemeData.dark();
+      default:
+        return ThemeData.light();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<AppSettings>(
-      valueListenable: settingNotifier,
+    return ValueListenableBuilder<themeNumber>(
+      valueListenable: currentTheme,
       builder: (context, curSettings, widget) {
         return MaterialApp(
-          // showSemanticsDebugger: true,
           title: 'AStorage',
-          theme: currentSettings.currentTheme,
+          theme: selectTheme(curSettings),
           home: const BaseWidget(),
         );
       },

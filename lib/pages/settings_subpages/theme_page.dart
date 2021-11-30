@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/global_things/settings.dart';
 
 class ThemePage extends StatefulWidget {
   const ThemePage({Key? key}) : super(key: key);
@@ -14,7 +15,28 @@ class _ThemePageState extends State<ThemePage> {
       appBar: AppBar(
         title: const Text("Выберите тему"),
       ),
-      body: ListTile()
+      body: ListView(
+        children: [
+          RadioListTile<themeNumber>(
+            title: const Text("Светлая тема"),
+            value: themeNumber.light,
+            groupValue: currentTheme.value,
+            onChanged: (value) => setState(() {
+              currentTheme.value = value!;
+            }),
+          ),
+          RadioListTile<themeNumber>(
+            title: const Text("Темная тема"),
+            value: themeNumber.dark,
+            groupValue: currentTheme.value,
+            onChanged: (value) => {
+              setState(() {
+                currentTheme.value = value!;
+              })
+            },
+          ),
+        ],
+      ),
     );
   }
 }
