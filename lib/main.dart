@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
+import './global_things/settings.dart';
 import 'package:flutter_application_1/pages/search_page.dart';
 import 'package:flutter_application_1/pages/send_page.dart';
-import 'package:flutter_application_1/pages/setting_page.dart';
+import 'package:flutter_application_1/pages/settings_page.dart';
 
 void main() => runApp(const StartApp());
 
-class StartApp extends StatelessWidget {
+class StartApp extends StatefulWidget {
   const StartApp({Key? key}) : super(key: key);
+
+  @override
+  State<StartApp> createState() => _StartAppState();
+}
+
+class _StartAppState extends State<StartApp> {
+  final settingNotifier = ValueNotifier(currentSettings);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // showSemanticsDebugger: true,
-      title: 'AsApp',
-      theme: ThemeData(
-        primaryColor: Colors.blue,
-      ),
-      home: const BaseWidget(),
-      // initialRoute: '/',
-      // onGenerateRoute: RouteGenerator.generateRoute,
+    return ValueListenableBuilder<AppSettings>(
+      valueListenable: settingNotifier,
+      builder: (context, curSettings, widget) {
+        return MaterialApp(
+          // showSemanticsDebugger: true,
+          title: 'AStorage',
+          theme: currentSettings.currentTheme,
+          home: const BaseWidget(),
+        );
+      },
     );
   }
 }
