@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/global_things/settings.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import '../global_things/base.dart';
@@ -11,12 +12,13 @@ Future<Question> sendImageDio(XFile file) async {
       contentType: MediaType("image", file.path.split(".").last),
     ),
   });
-  var response = await dioPost(
+  var response = await dioFetch(
+    method: "POST",
     data: formData,
     dirLink: '/Files',
     contentType: "multipart/form-data",
     headers: {
-      "Authorization": key,
+      "Authorization": curUser.key,
     },
   );
   if (response.statusCode == 200) {
@@ -29,11 +31,12 @@ Future<Question> sendImageDio(XFile file) async {
 }
 
 Future<void> sendAnswer(int id, String answer) async {
-  var response = await dioPost(
+  var response = await dioFetch(
+    method: "POST",
     data: null,
     dirLink: '/Files/$id/Answer?answer=$answer',
     headers: {
-      "Authorization": key,
+      "Authorization": curUser.key,
     },
   );
   if (response.statusCode != 200) {

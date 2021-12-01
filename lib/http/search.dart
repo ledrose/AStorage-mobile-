@@ -1,11 +1,7 @@
 import 'dart:convert';
+import 'package:flutter_application_1/global_things/settings.dart';
 import '../global_things/base.dart';
 
-// String url = "$halfLink/Files/Table";
-// Map<String, String> headers = {
-//   "Content-Type": "application/json",
-//   "Authorization": key,
-// };
 
 List<List<String>> formatSearch(String text) {
   const defaultSearch = ["string", "string"];
@@ -49,11 +45,12 @@ Map<String, dynamic> searchBody(List<List<String>> sort) {
 
 Future<Album> createSearch({String searchText = ""}) async {
   print("Sending");
-  var response = await dioPost(
+  var response = await dioFetch(
+    method: "POST",
     data: jsonEncode(searchBody(formatSearch(searchText))),
     dirLink: '/Files/Table',
     headers: {
-      "Authorization": key,
+      "Authorization": curUser.key,
     },
   );
   // final response = await http.post(

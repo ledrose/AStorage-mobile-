@@ -17,24 +17,18 @@ class _ThemePageState extends State<ThemePage> {
       ),
       body: ListView(
         children: [
-          RadioListTile<themeNumber>(
-            title: const Text("Светлая тема"),
-            value: themeNumber.light,
-            groupValue: currentTheme.value,
-            onChanged: (value) => setState(() {
-              currentTheme.value = value!;
-            }),
-          ),
-          RadioListTile<themeNumber>(
-            title: const Text("Темная тема"),
-            value: themeNumber.dark,
-            groupValue: currentTheme.value,
-            onChanged: (value) => {
-              setState(() {
-                currentTheme.value = value!;
-              })
-            },
-          ),
+          ...themeList.map(
+            (e) => RadioListTile<ThemeData>(
+              title: Text(e["name"] as String),
+              value: e["theme"] as ThemeData,
+              groupValue: currentTheme.value,
+              onChanged: (value) => setState(
+                () {
+                  currentTheme.value = value!;
+                },
+              ),
+            ),
+          )
         ],
       ),
     );

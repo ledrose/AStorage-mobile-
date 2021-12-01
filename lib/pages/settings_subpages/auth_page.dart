@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/global_things/settings.dart';
 import 'package:flutter_application_1/http/authtorization.dart';
 
 class AuthPage extends StatefulWidget {
@@ -91,8 +92,7 @@ class _AuthPageState extends State<AuthPage> {
                     ScaffoldMessenger.of(context)
                         .showSnackBar(const SnackBar(content: Text("Error")));
                   } else {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(token)));
+                    curUser =User(token: token);
                   }
                 }
               },
