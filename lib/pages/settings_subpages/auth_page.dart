@@ -19,8 +19,16 @@ class _AuthPageState extends State<AuthPage> {
       appBar: AppBar(
         title: const Text("Войдите в аккаунт"),
       ),
-      body: loginWidget(),
+      body: chooseLogWidget(),
     );
+  }
+
+  Widget chooseLogWidget() {
+    if (curUser.logged) {
+      return loggedWidget();
+    } else {
+      return loginWidget();
+    }
   }
 
   Widget loginWidget() {
@@ -90,9 +98,12 @@ class _AuthPageState extends State<AuthPage> {
                   );
                   if (token == null) {
                     ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(content: Text("Error")));
+                        .showSnackBar(const SnackBar(content: Text("Такой пользаватель не найден")));
                   } else {
-                    curUser =User(token: token);
+                    curUser = User.fromToken(token);
+                    await curUser.recieveUserData();
+                    await curUser.recievePermissions();
+                    setState(() {});
                   }
                 }
               },
@@ -105,6 +116,22 @@ class _AuthPageState extends State<AuthPage> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget loggedWidget() {
+    return Center(
+      child: ListView(
+        children: [
+          Text("Вы вошли под именем ${curUser.name}"),
+          ElevatedButton(
+              onPressed: () {
+                curUser = User.empty();
+                setState(() {});
+              },
+              child: const Text("Выйти из аккаунта"))
         ],
       ),
     );

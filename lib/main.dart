@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/global_things/base.dart';
 import './global_things/settings.dart';
 import 'package:flutter_application_1/pages/search_page.dart';
 import 'package:flutter_application_1/pages/send_page.dart';
@@ -17,7 +16,7 @@ class StartApp extends StatefulWidget {
 class _StartAppState extends State<StartApp> {
   @override
   void initState() {
-    curUser = User(token:key);
+    User.empty();
     currentTheme = ValueNotifier<ThemeData>(themeList[0]["theme"] as ThemeData);
     super.initState();
   }
