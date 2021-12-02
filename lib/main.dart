@@ -27,6 +27,7 @@ class _StartAppState extends State<StartApp> {
       builder: (context, curTheme, widget) {
         return MaterialApp(
           title: 'AStorage',
+          key: appKey,
           theme: curTheme,
           home: const BaseWidget(),
         );

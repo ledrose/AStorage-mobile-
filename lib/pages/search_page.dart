@@ -82,6 +82,7 @@ class _SearchPageState extends State<SearchPage> {
       return Scrollbar(
         interactive: true,
         child: ListView(
+          cacheExtent: MediaQuery.of(context).size.height*10,
           scrollDirection: Axis.vertical,
           children: [...alb.questions.map((q) => buildQuestionBlock(q))],
         ),
@@ -94,7 +95,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget buildQuestionBlock(Question q) {
-    return FutureBuilder(
+    return (q.fileBytes!=null)?questionBlock(context, q, Image.memory(q.fileBytes!)):
+      FutureBuilder(
       future: getImage(q.id),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
@@ -108,6 +110,7 @@ class _SearchPageState extends State<SearchPage> {
             if (snapshot.hasError) {
               return Text("Error has occured." + snapshot.error.toString());
             } else {
+              q.fileBytes = snapshot.data as Uint8List;
               return questionBlock(
                   context, q, Image.memory(snapshot.data as Uint8List));
             }
@@ -127,23 +130,23 @@ class _SearchPageState extends State<SearchPage> {
             alignment: Alignment.center,
             child: img,
           ),
-          // Text(
+          // Text( //TODO
           //   'Рассшифровка текста с картинки: ${q.imgText}',
           //   textAlign: TextAlign.start,
           // ),
           ButtonBarTheme(
             data: const ButtonBarThemeData(),
-              child: ButtonBar(
-                children: <Widget>[
-                  TextButton(
-                    onPressed: () async {
-                      _showQuestionDialog(context, q);
-                    },
-                    child: Text('Ответы ${q.answers.length}'),
-                  )
-                ],
-              ),
+            child: ButtonBar(
+              children: <Widget>[
+                TextButton(
+                  onPressed: () async {
+                    _showQuestionDialog(context, q);
+                  },
+                  child: Text('Ответы ${q.answers.length}'),
+                )
+              ],
             ),
+          ),
         ],
       ),
     );
