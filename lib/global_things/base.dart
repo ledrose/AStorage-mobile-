@@ -1,18 +1,17 @@
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import './settings.dart';
 
 String version = '1.0';
 String baseUrl = "https://bfs-astorage.somee.com";
 String halfLink = '$baseUrl/api/v$version';
+var scafState = ScaffoldMessengerState();
 
-void showTextSnackBar(String s) {
+void showTextSnackBar(BuildContext context,String s) {
   var snackBar = SnackBar(
     content: Text(s),
   );
-  ScaffoldMessenger.of(appKey.currentContext!).showSnackBar(snackBar);
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
 Future<Response<dynamic>> dioFetch({

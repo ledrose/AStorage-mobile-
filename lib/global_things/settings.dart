@@ -18,7 +18,8 @@ class User {
   String key;
   String? name;
   int? id;
-  List<String> permissions = [];
+  final List<String> _permissions = [];
+  List<String> get permissions =>_permissions;
   User._create({required this.key, required this.logged});
 
   factory User.fromToken(String token) {
@@ -62,17 +63,10 @@ class User {
     if (response.statusCode == 200) {
       List data = response.data as List;
       for (var e in data) {
-        permissions.add(e["permission"]);
+        _permissions.add(e["permission"]);
       }
     } else {
-      print(response.statusMessage);
+      
     }
-  }
-
-  bool getPermission(String permissionName) {
-    if (permissions.contains(permissionName)) {
-      return true;
-    }
-    return false;
   }
 }

@@ -25,6 +25,40 @@ class _SendFormState extends State<SendForm> {
   XFile? _imageFile;
   final TextEditingController _controller = TextEditingController();
   final ImagePicker _picker = ImagePicker();
+  bool _isButtonDisabled = false;
+  void _sendFile() async {
+    if (_imageFile == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("You did not choose an image")));
+    } else {
+      if (_imageFile == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Файл-картинка равна null")));
+      } else {
+        setState(() {
+          _isButtonDisabled = true;
+        });
+        Question q = await sendImageDio(_imageFile!).then((q) => q);
+        if (q.error == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Картинка отправлена")));
+          if (_controller.value.text.trim() != "") {
+            await sendAnswer(q.id, _controller.value.text)
+                .whenComplete(() => null);
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("Ответ принят")));
+          }
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(q.error!)));
+        }
+        setState(() {
+          _isButtonDisabled = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -38,28 +72,7 @@ class _SendFormState extends State<SendForm> {
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
         ElevatedButton(
-          onPressed: () async {
-            SnackBar snackBar;
-            if (_imageFile == null) {
-              snackBar = const SnackBar(
-                content: Text("You did not choose an image"),
-              );
-            } else {
-              Question q = await sendImageDio(_imageFile!).then((q) => q);
-              if (q.error == null) {
-                String value = _controller.value.text;
-                snackBar = SnackBar(content: Text("You typed: $value"));
-                if (_controller.value.text.trim() != "") {
-                  await sendAnswer(q.id, _controller.value.text)
-                      .whenComplete(() => null);
-                  snackBar = const SnackBar(content: Text("Ответ принят"));
-                }
-              } else {
-                snackBar = SnackBar(content: Text(q.error!));
-              }
-            }
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          },
+          onPressed: (_isButtonDisabled) ? null : _sendFile,
           child: const Text("Send data"),
         ),
       ],
