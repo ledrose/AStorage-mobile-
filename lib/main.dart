@@ -16,7 +16,7 @@ class StartApp extends StatefulWidget {
 class _StartAppState extends State<StartApp> {
   @override
   void initState() {
-    User.empty();
+    curUser=User.empty(); //TODO fix
     currentTheme = ValueNotifier<ThemeData>(themeList[0]["theme"] as ThemeData);
     super.initState();
   }

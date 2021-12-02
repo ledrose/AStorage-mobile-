@@ -2,6 +2,14 @@ import 'dart:convert';
 import 'package:flutter_application_1/global_things/settings.dart';
 import '../global_things/base.dart';
 
+Future<int?> deleteQuestion(int id) async {
+  var response = await dioFetch(
+    dirLink: "/Files/$id",
+    method: "DELETE",
+    headers: {"Authorization": curUser.key},
+  );
+  return response.statusCode;
+}
 
 List<List<String>> formatSearch(String text) {
   const defaultSearch = ["string", "string"];

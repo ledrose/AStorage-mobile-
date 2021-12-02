@@ -7,7 +7,7 @@ String baseUrl = "https://bfs-astorage.somee.com";
 String halfLink = '$baseUrl/api/v$version';
 var scafState = ScaffoldMessengerState();
 
-void showTextSnackBar(BuildContext context,String s) {
+void showTextSnackBar(BuildContext context, String s) {
   var snackBar = SnackBar(
     content: Text(s),
   );
@@ -29,7 +29,7 @@ Future<Response<dynamic>> dioFetch({
   dio.options.headers = headers;
   return await dio.fetch(
     RequestOptions(
-      path: halfLink+dirLink,
+      path: halfLink + dirLink,
       data: data,
       followRedirects: false,
       validateStatus: (status) {
@@ -61,18 +61,21 @@ class Album {
 }
 
 class Question {
+  Album? parent;
   final int id;
   final String fileName;
   Uint8List? fileBytes;
   String? imgText;
   final List<Answer> answers;
   String? error;
-  Question(
-      {required this.id,
-      required this.fileName,
-      required this.answers,
-      this.imgText,
-      this.error});
+  Question({
+    required this.id,
+    required this.fileName,
+    required this.answers,
+    this.imgText,
+    this.error,
+    this.parent,
+  });
 
   factory Question.fromJson(Map<dynamic, dynamic> json) {
     List<Answer> tAnswers = [];

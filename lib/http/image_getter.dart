@@ -9,7 +9,7 @@ Map<String, String> headers = {
   "accept": "text/plain",
 };
 
-Future<Uint8List> getImage(int id) async {
+Future<Uint8List> getImage(int id) async { //TODO изменить на dioFetch
   print("Started sending");
   final response = await http.get(
     Uri.parse(url + id.toString()),

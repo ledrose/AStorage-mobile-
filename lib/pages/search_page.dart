@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/global_things/settings.dart';
 import 'package:flutter_application_1/http/image_getter.dart';
 import 'package:flutter_application_1/http/search.dart';
 import 'package:flutter_application_1/http/sender.dart';
@@ -13,6 +14,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  Album? globalAlbum;
   final TextEditingController _textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,9 @@ class _SearchPageState extends State<SearchPage> {
           Expanded(
             child: RefreshIndicator(
               onRefresh: () {
-                setState(() {});
+                setState(() {
+                  globalAlbum = null;
+                });
                 return Future.delayed(const Duration(milliseconds: 1000));
               },
               child: buildQuestionList(),
@@ -45,7 +49,9 @@ class _SearchPageState extends State<SearchPage> {
             hintText: 'Введите поисковый запрос',
             suffixIcon: IconButton(
               onPressed: () {
-                setState(() {});
+                setState(() {
+                  globalAlbum = null;
+                });
               },
               icon: const Icon(Icons.arrow_forward),
             ),
@@ -56,35 +62,41 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget buildQuestionList() {
-    return FutureBuilder(
-      future: createSearch(searchText: _textController.value.text),
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          case ConnectionState.done:
-            if (snapshot.hasError) {
-              return Text("Error has occured." + snapshot.error.toString());
-            } else {
-              return questionList(context, snapshot.data as Album);
-            }
-          default:
-            return Container();
-        }
-      },
-    );
+    return (globalAlbum != null)
+        ? questionList(context)
+        : FutureBuilder(
+            future: createSearch(searchText: _textController.value.text),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                case ConnectionState.done:
+                  if (snapshot.hasError) {
+                    return Text(
+                        "Error has occured." + snapshot.error.toString());
+                  } else {
+                    globalAlbum = snapshot.data as Album;
+                    return questionList(context);
+                  }
+                default:
+                  return Container();
+              }
+            },
+          );
   }
 
-  Widget questionList(BuildContext context, Album alb) {
-    if (alb.questions.isNotEmpty) {
+  Widget questionList(BuildContext context) {
+    if (globalAlbum!.questions.isNotEmpty) {
       return Scrollbar(
         interactive: true,
         child: ListView(
-          cacheExtent: MediaQuery.of(context).size.height*10,
+          cacheExtent: MediaQuery.of(context).size.height * 10,
           scrollDirection: Axis.vertical,
-          children: [...alb.questions.map((q) => buildQuestionBlock(q))],
+          children: [
+            ...globalAlbum!.questions.map((q) => buildQuestionBlock(q))
+          ],
         ),
       );
     } else {
@@ -95,30 +107,32 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget buildQuestionBlock(Question q) {
-    return (q.fileBytes!=null)?questionBlock(context, q, Image.memory(q.fileBytes!)):
-      FutureBuilder(
-      future: getImage(q.id),
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return const Card(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          case ConnectionState.done:
-            if (snapshot.hasError) {
-              return Text("Error has occured." + snapshot.error.toString());
-            } else {
-              q.fileBytes = snapshot.data as Uint8List;
-              return questionBlock(
-                  context, q, Image.memory(snapshot.data as Uint8List));
-            }
-          default:
-            return Container();
-        }
-      },
-    );
+    return (q.fileBytes != null)
+        ? questionBlock(context, q, Image.memory(q.fileBytes!))
+        : FutureBuilder(
+            future: getImage(q.id),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return const Card(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                case ConnectionState.done:
+                  if (snapshot.hasError) {
+                    return Text(
+                        "Error has occured." + snapshot.error.toString());
+                  } else {
+                    q.fileBytes = snapshot.data as Uint8List;
+                    return questionBlock(
+                        context, q, Image.memory(snapshot.data as Uint8List));
+                  }
+                default:
+                  return Container();
+              }
+            },
+          );
   }
 
   Widget questionBlock(BuildContext context, Question q, Widget img) {
@@ -130,26 +144,70 @@ class _SearchPageState extends State<SearchPage> {
             alignment: Alignment.center,
             child: img,
           ),
-          // Text( //TODO
+          // Text(  //TODO
           //   'Рассшифровка текста с картинки: ${q.imgText}',
           //   textAlign: TextAlign.start,
           // ),
           ButtonBarTheme(
             data: const ButtonBarThemeData(),
             child: ButtonBar(
+              alignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                IconButton(
+                  onPressed: () async {
+                    if (curUser.permissions.contains("DeleteFiles")) {
+                      if (await deleteQuestion(q.id) == 200) {
+                        setState(() {
+                          globalAlbum!.questions.remove(q);
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Ошибка: файл не был удален")));
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text(
+                              "У вас нет прав на соверешение этого действия")));
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.delete,
+                    size: 35.0,
+                    color: Colors.red,
+                  ),
+                ),
                 TextButton(
                   onPressed: () async {
                     _showQuestionDialog(context, q);
                   },
                   child: Text('Ответы ${q.answers.length}'),
-                )
+                ),
               ],
             ),
           ),
         ],
       ),
     );
+    //     Positioned(
+    //       bottom: 10.0,
+    //       left: 20.0,
+    //       child: IconButton(
+    //         onPressed: () {
+    //           deleteQuestion(q.id);
+    //           setState(() {
+    //             globalAlbum!.questions.remove(q);
+    //           });
+    //         },
+    //         icon: const Icon(
+    //           Icons.delete,
+    //           size: 40.0,
+    //           color: Colors.red,
+    //         ),
+    //       ),
+    //     ),
+    //   ],
+    // );
   }
 
   Future<void> _showQuestionDialog(BuildContext context, Question q) async {
