@@ -19,7 +19,10 @@ class _AuthPageState extends State<AuthPage> {
       appBar: AppBar(
         title: const Text("Войдите в аккаунт"),
       ),
-      body: chooseLogWidget(),
+      body: Container(
+        padding: const EdgeInsets.all(50),
+        child: chooseLogWidget(),
+      ),
     );
   }
 
@@ -97,8 +100,8 @@ class _AuthPageState extends State<AuthPage> {
                     _passwordController.value.text,
                   );
                   if (token == null) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(content: Text("Такой пользаватель не найден")));
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Такой пользаватель не найден")));
                   } else {
                     curUser = User.fromToken(token);
                     await curUser.recieveUserData();
@@ -120,20 +123,28 @@ class _AuthPageState extends State<AuthPage> {
       ),
     );
   }
+  List<Widget> permissionListWidgets() {
+    if (curUser.permissions.isNotEmpty) {
+      var list = [const Text("Ваши разрешения"),...curUser.permissions.map((e) => Text(e))];
+      return list;
+    }
+    else {
+      return [const Text("У вас нету особых разрешений")];
+    }
+  }
 
   Widget loggedWidget() {
-    return Center(
-      child: ListView(
-        children: [
-          Text("Вы вошли под именем ${curUser.name}"),
-          ElevatedButton(
-              onPressed: () {
-                curUser = User.empty();
-                setState(() {});
-              },
-              child: const Text("Выйти из аккаунта"))
-        ],
-      ),
+    return ListView(
+      children: [
+        Text("Вы вошли под именем ${curUser.name}"),
+        ...permissionListWidgets(),
+        ElevatedButton(
+            onPressed: () {
+              curUser = User.empty();
+              setState(() {});
+            },
+            child: const Text("Выйти из аккаунта"))
+      ],
     );
   }
 }
