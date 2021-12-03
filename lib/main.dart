@@ -16,9 +16,9 @@ class StartApp extends StatefulWidget {
 class _StartAppState extends State<StartApp> {
   @override
   void initState() {
-    curUser=User.empty(); //TODO fix
-    currentTheme = ValueNotifier<ThemeData>(themeList[0]["theme"] as ThemeData);
     super.initState();
+    DataSaver.initData().whenComplete(() => setState(DataSaver.loadUser));
+    currentTheme = ValueNotifier<ThemeData>(themeList[0]["theme"] as ThemeData);
   }
   @override
   Widget build(BuildContext context) {

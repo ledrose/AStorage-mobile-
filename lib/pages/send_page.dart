@@ -77,7 +77,7 @@ class _SendFormState extends State<SendForm> {
         ),
         TextField(
           controller: _controller,
-          decoration: const InputDecoration(border: OutlineInputBorder()),
+          decoration: const InputDecoration(border: OutlineInputBorder(),prefixText: "Введите ответ, если хотите"),
         ),
         ElevatedButton(
           onPressed: (_isButtonDisabled) ? null : _sendFile,

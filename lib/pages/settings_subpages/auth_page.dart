@@ -114,6 +114,7 @@ class _AuthPageState extends State<AuthPage> {
                           curUser = User.fromToken(token);
                           await curUser.recieveUserData();
                           await curUser.recievePermissions();
+                          DataSaver.saveUser();
                         }
                         setState(() {
                           _isAuthButtonLocked = false;
@@ -153,8 +154,10 @@ class _AuthPageState extends State<AuthPage> {
         ...permissionListWidgets(),
         ElevatedButton(
             onPressed: () {
-              curUser = User.empty();
-              setState(() {});
+              setState(() {
+                curUser = User.empty();
+                DataSaver.removeUser();
+              });
             },
             child: const Text("Выйти из аккаунта"))
       ],
