@@ -139,15 +139,15 @@ class _SearchPageState extends State<SearchPage> {
     return Card(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
+        children: [
           Container(
             alignment: Alignment.center,
             child: img,
           ),
-          // Text(  //TODO
+          // (curUser.permissions.contains("GetLogs"))?Text(  //TODO решить, что делать с этим
           //   'Рассшифровка текста с картинки: ${q.imgText}',
           //   textAlign: TextAlign.start,
-          // ),
+          // ):const SizedBox(height: 10,),
           ButtonBarTheme(
             data: const ButtonBarThemeData(),
             child: ButtonBar(
@@ -189,25 +189,6 @@ class _SearchPageState extends State<SearchPage> {
         ],
       ),
     );
-    //     Positioned(
-    //       bottom: 10.0,
-    //       left: 20.0,
-    //       child: IconButton(
-    //         onPressed: () {
-    //           deleteQuestion(q.id);
-    //           setState(() {
-    //             globalAlbum!.questions.remove(q);
-    //           });
-    //         },
-    //         icon: const Icon(
-    //           Icons.delete,
-    //           size: 40.0,
-    //           color: Colors.red,
-    //         ),
-    //       ),
-    //     ),
-    //   ],
-    // );
   }
 
   Future<void> _showQuestionDialog(BuildContext context, Question q) async {

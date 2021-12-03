@@ -1,23 +1,19 @@
 import 'dart:typed_data';
+import 'package:dio/dio.dart';
 import 'package:flutter_application_1/global_things/settings.dart';
-import 'package:http/http.dart' as http;
 import '../global_things/base.dart';
 
-String url = '$halfLink/Files/';
-Map<String, String> headers = {
-  "Authorization": curUser.key,
-  "accept": "text/plain",
-};
-
-Future<Uint8List> getImage(int id) async { //TODO изменить на dioFetch
-  print("Started sending");
-  final response = await http.get(
-    Uri.parse(url + id.toString()),
-    headers: headers,
+Future<Uint8List> getImage(int id) async {
+  final response = await dioFetch(
+    dirLink: '/Files/$id',
+    method: "GET",
+    headers: {
+      "Authorization": curUser.key,
+    },
+    responseType: ResponseType.bytes,
   );
   if (response.statusCode == 200) {
-    print("Recieved");
-    return response.bodyBytes;
+    return response.data as Uint8List;
   } else {
     throw Exception('Failed to recieve image');
   }

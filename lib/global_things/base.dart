@@ -21,6 +21,7 @@ Future<Response<dynamic>> dioFetch({
   Map<String, dynamic>? headers,
   String contentType = "application/json",
   required String method,
+  ResponseType responseType = ResponseType.json,
 }) async {
   Dio dio = Dio();
   dio.options.baseUrl = halfLink;
@@ -40,7 +41,7 @@ Future<Response<dynamic>> dioFetch({
       contentType: contentType,
       receiveDataWhenStatusError: true,
       method: method,
-      responseType: ResponseType.json,
+      responseType: responseType,
     ),
   );
 }

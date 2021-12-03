@@ -10,6 +10,7 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
+  bool _isAuthButtonLocked = false;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -89,27 +90,36 @@ class _AuthPageState extends State<AuthPage> {
             width: 250,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: Colors.blue,
+              // color: Colors.blue,
             ),
-            child: TextButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  _formKey.currentState!.save();
-                  String? token = await getToken(
-                    _emailController.value.text,
-                    _passwordController.value.text,
-                  );
-                  if (token == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Такой пользаватель не найден")));
-                  } else {
-                    curUser = User.fromToken(token);
-                    await curUser.recieveUserData();
-                    await curUser.recievePermissions();
-                    setState(() {});
-                  }
-                }
-              },
+            child: ElevatedButton(
+              onPressed: (_isAuthButtonLocked)
+                  ? null
+                  : () async {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        setState(() {
+                          _isAuthButtonLocked = true;
+                        });
+                        String? token = await getToken(
+                          _emailController.value.text,
+                          _passwordController.value.text,
+                        );
+                        if (token == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content:
+                                      Text("Такой пользаватель не найден")));
+                        } else {
+                          curUser = User.fromToken(token);
+                          await curUser.recieveUserData();
+                          await curUser.recievePermissions();
+                        }
+                        setState(() {
+                          _isAuthButtonLocked = false;
+                        });
+                      }
+                    },
               child: const Text(
                 'Login',
                 style: TextStyle(
@@ -123,12 +133,15 @@ class _AuthPageState extends State<AuthPage> {
       ),
     );
   }
+
   List<Widget> permissionListWidgets() {
     if (curUser.permissions.isNotEmpty) {
-      var list = [const Text("Ваши разрешения"),...curUser.permissions.map((e) => Text(e))];
+      var list = [
+        const Text("Ваши разрешения"),
+        ...curUser.permissions.map((e) => Text(e))
+      ];
       return list;
-    }
-    else {
+    } else {
       return [const Text("У вас нету особых разрешений")];
     }
   }
