@@ -35,7 +35,7 @@ Future<Response<dynamic>> dioFetch({
       followRedirects: false,
       validateStatus: (status) {
         if (status == null) return false;
-        return status < 500;
+        return status < 600;
       },
       headers: headers,
       contentType: contentType,
@@ -48,15 +48,30 @@ Future<Response<dynamic>> dioFetch({
 
 class Album {
   final List<Question> questions;
-  Album({required this.questions});
+  final int recordsFiltered;
+  int pagesFiltered = 1;
+  int startIndex = 0;
+  int batchSize = 10;
+  Album({
+    required this.questions,
+    required this.recordsFiltered,
+    required this.startIndex,
+    required this.batchSize,
+  }) {
+    pagesFiltered = (recordsFiltered / batchSize).ceil();
+  }
 
-  factory Album.fromJson(Map<String, dynamic> json) {
+  factory Album.fromJson(
+      Map<String, dynamic> json, int startIndex, int batchSize) {
     List<Question> tQuestions = [];
     for (var item in (json['data'] as List<dynamic>)) {
       tQuestions.add(Question.fromJson(item));
     }
     return Album(
+      recordsFiltered: json["recordsFiltered"],
       questions: tQuestions,
+      startIndex: startIndex,
+      batchSize: batchSize,
     );
   }
 }

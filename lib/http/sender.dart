@@ -5,13 +5,21 @@ import '../global_things/base.dart';
 import 'package:dio/dio.dart';
 
 Future<Question> sendImageDio(XFile file) async {
-  FormData formData = FormData.fromMap({
-    "File": await MultipartFile.fromFile(
-      file.path,
-      filename: file.path.split('/').last,
-      contentType: MediaType("image", file.path.split(".").last),
-    ),
-  });
+  FormData formData = FormData.fromMap(
+    {
+      "File": await MultipartFile.fromFile(
+        file.path,
+        filename: file.path.split('/').last,
+        contentType: MediaType(
+          "image",
+          // file.path.split(".").last
+          (file.path.split(".").last == "jpg")
+              ? "jpeg"
+              : file.path.split(".").last,
+        ),
+      ),
+    },
+  );
   var response = await dioFetch(
     method: "POST",
     data: formData,

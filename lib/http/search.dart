@@ -31,11 +31,11 @@ List<List<String>> formatSearch(String text) {
   }
 }
 
-Map<String, dynamic> searchBody(List<List<String>> sort) {
+Map<String, dynamic> searchBody(List<List<String>> sort,int startIndex,int? batchSize) {
   return {
     "draw": 0,
-    "start": 0,
-    "length": 10,
+    "start": startIndex,
+    "length": batchSize,
     "columns": [
       ...sort.map((e) => {
             "name": e[0],
@@ -51,24 +51,19 @@ Map<String, dynamic> searchBody(List<List<String>> sort) {
   };
 }
 
-Future<Album> createSearch({String searchText = ""}) async {
+Future<Album> createSearch(int startIndex,int batchSize ,{String searchText = ""}) async {
   print("Sending");
   var response = await dioFetch(
     method: "POST",
-    data: jsonEncode(searchBody(formatSearch(searchText))),
+    data: jsonEncode(searchBody(formatSearch(searchText),startIndex,batchSize)),
     dirLink: '/Files/Table',
     headers: {
       "Authorization": curUser.key,
     },
   );
-  // final response = await http.post(
-  //   Uri.parse(url),
-  //   headers: headers,
-  //   body: jsonEncode(searchBody(formatSearch(searchText))),
-  // );
   if (response.statusCode == 200) {
     print("Recieved");
-    return Album.fromJson(response.data);
+    return Album.fromJson(response.data,startIndex,batchSize);
   } else {
     print("Failed");
     throw Exception('Failed to create Album');

@@ -15,6 +15,8 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   Album? globalAlbum;
+  int _currentPage = 1;
+  final int _batchSize = 3;
   final TextEditingController _textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -51,6 +53,7 @@ class _SearchPageState extends State<SearchPage> {
               onPressed: () {
                 setState(() {
                   globalAlbum = null;
+                  _currentPage = 1;
                 });
               },
               icon: const Icon(Icons.arrow_forward),
@@ -65,7 +68,8 @@ class _SearchPageState extends State<SearchPage> {
     return (globalAlbum != null)
         ? questionList(context)
         : FutureBuilder(
-            future: createSearch(searchText: _textController.value.text),
+            future: createSearch((_currentPage - 1) * _batchSize, _batchSize,
+                searchText: _textController.value.text),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
@@ -95,7 +99,8 @@ class _SearchPageState extends State<SearchPage> {
           cacheExtent: MediaQuery.of(context).size.height * 10,
           scrollDirection: Axis.vertical,
           children: [
-            ...globalAlbum!.questions.map((q) => buildQuestionBlock(q))
+            ...globalAlbum!.questions.map((q) => buildQuestionBlock(q)),
+            directionalButtonBar(), //TODO
           ],
         ),
       );
@@ -103,6 +108,64 @@ class _SearchPageState extends State<SearchPage> {
       return const Center(
         child: Text("Вопросов по вашему запросу не было найдено"),
       );
+    }
+  }
+
+  Widget directionalButtonBar() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ...getButtonIndexList(globalAlbum!, _currentPage).map(
+          (e) {
+            if (e == -1) {
+              return const Text("...");
+            } else {
+              return SizedBox(
+                width: 30,
+                child: TextButton(
+                  onPressed: (_currentPage == e)
+                      ? null
+                      : () {
+                          setState(() {
+                            globalAlbum = null;
+                            _currentPage = e;
+                          });
+                        },
+                  child: Text(e.toString()),
+                ),
+              );
+            }
+          },
+        )
+      ],
+    );
+  }
+
+  List<int> getButtonIndexList(Album alb, int curPage) {
+    if (alb.pagesFiltered > 1) {
+      if (alb.pagesFiltered <= 5) {
+        return List.generate(alb.pagesFiltered, (index) => index + 1);
+      } else {
+        List<int> tList = List.generate(alb.pagesFiltered, (index) => index + 1)
+            .map((e) => (((curPage - e).abs() <= 1 ||
+                        e == 1 ||
+                        e == alb.pagesFiltered) ||
+                    (curPage == 1 && e == 3) ||
+                    (curPage == alb.pagesFiltered &&
+                        e == alb.pagesFiltered - 2))
+                ? e
+                : -1)
+            .toList();
+        for (var i = 1; i < tList.length; i++) {
+          while ((tList[i - 1] == -1) && (tList[i] == -1)) {
+            tList.removeAt(i);
+          }
+        }
+        return tList;
+      }
+    } else {
+      return [];
     }
   }
 
