@@ -38,7 +38,7 @@ Future<Question> sendImageDio(XFile file) async {
   }
 }
 
-Future<void> sendAnswer(int id, String answer) async {
+Future<String> sendAnswer(int id, String answer) async {
   var response = await dioFetch(
     method: "POST",
     data: null,
@@ -46,9 +46,10 @@ Future<void> sendAnswer(int id, String answer) async {
     headers: {
       "Authorization": curUser.key,
     },
+    responseType: ResponseType.json,
   );
-  if (response.statusCode != 200) {
-    // showTextSnackBar(response.data.toString());
-    print(response.data.toString());
+  if (response.data=="") {
+    return "Ответ отправлен";
   }
+  return response.data.toString();
 }

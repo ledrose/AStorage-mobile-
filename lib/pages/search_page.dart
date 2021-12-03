@@ -96,7 +96,7 @@ class _SearchPageState extends State<SearchPage> {
       return Scrollbar(
         interactive: true,
         child: ListView(
-          cacheExtent: MediaQuery.of(context).size.height * 10,
+          cacheExtent: MediaQuery.of(context).size.height * _batchSize,
           scrollDirection: Axis.vertical,
           children: [
             ...globalAlbum!.questions.map((q) => buildQuestionBlock(q)),
@@ -370,14 +370,18 @@ class _SearchPageState extends State<SearchPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextButton(
-                  onPressed: () {
-                    sendAnswer(id, _textController.value.text.trim())
-                        .whenComplete(() {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Ответ отправлен")));
+                  onPressed: () async {
+                    String responseString = await sendAnswer(id, _textController.value.text.trim());
+                    // if (responseString) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(responseString)));
+                    // }
+                    // else {
+                    //   ScaffoldMessenger.of(context).showSnackBar(
+                    //       const SnackBar(content: Text("Вы уже добавляли ответ")));
+                    // }
                       Navigator.of(context).pop();
-                    });
-                  },
+                    },
                   child: const Text("Отправить ответ"),
                 ),
                 TextButton(
