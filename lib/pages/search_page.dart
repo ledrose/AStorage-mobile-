@@ -18,6 +18,7 @@ class _SearchPageState extends State<SearchPage> {
   int _currentPage = 1;
   final int _batchSize = 3;
   final TextEditingController _textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,7 +101,7 @@ class _SearchPageState extends State<SearchPage> {
           scrollDirection: Axis.vertical,
           children: [
             ...globalAlbum!.questions.map((q) => buildQuestionBlock(q)),
-            directionalButtonBar(), //TODO
+            directionalButtonBar(),
           ],
         ),
       );
@@ -207,10 +208,7 @@ class _SearchPageState extends State<SearchPage> {
             alignment: Alignment.center,
             child: img,
           ),
-          // (curUser.permissions.contains("GetLogs"))?Text(  //TODO решить, что делать с этим
-          //   'Рассшифровка текста с картинки: ${q.imgText}',
-          //   textAlign: TextAlign.start,
-          // ):const SizedBox(height: 10,),
+          (curUser.permissions.contains("GetLogs"))?buildImageTextBlock(q):const SizedBox(height: 10),
           ButtonBarTheme(
             data: const ButtonBarThemeData(),
             child: ButtonBar(
@@ -252,6 +250,37 @@ class _SearchPageState extends State<SearchPage> {
         ],
       ),
     );
+  }
+
+  Widget buildImageTextBlock(Question q) {
+    return (q.imgText!=null)? Text( 
+            'Рассшифровка текста с картинки: ${q.imgText}',
+            textAlign: TextAlign.start,
+          ):
+    FutureBuilder(
+            future: getQuestionText(q.id),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2.0,),
+                  );
+                case ConnectionState.done:
+                  if (snapshot.hasError) {
+                    return Text(
+                        "Error has occured." + snapshot.error.toString());
+                  } else {
+                    globalAlbum!.questions.firstWhere((e) => e==q).imgText=snapshot.data as String;
+                    return Text( 
+            'Рассшифровка текста с картинки: ${snapshot.data}',
+            textAlign: TextAlign.start,
+          );
+                  }
+                default:
+                  return Container();
+              }
+            },
+          );
   }
 
   Future<void> _showQuestionDialog(BuildContext context, Question q) async {
@@ -372,14 +401,8 @@ class _SearchPageState extends State<SearchPage> {
                 TextButton(
                   onPressed: () async {
                     String responseString = await sendAnswer(id, _textController.value.text.trim());
-                    // if (responseString) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(responseString)));
-                    // }
-                    // else {
-                    //   ScaffoldMessenger.of(context).showSnackBar(
-                    //       const SnackBar(content: Text("Вы уже добавляли ответ")));
-                    // }
                       Navigator.of(context).pop();
                     },
                   child: const Text("Отправить ответ"),

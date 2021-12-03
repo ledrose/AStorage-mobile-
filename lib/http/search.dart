@@ -1,6 +1,21 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter_application_1/global_things/settings.dart';
 import '../global_things/base.dart';
+
+Future<String> getQuestionText(int id) async {
+  var response = await dioFetch(
+    dirLink: "/Files/$id/Text",
+    method: "GET",
+    headers: {"Authorization": curUser.key},
+    responseType: ResponseType.plain,
+  );
+  if (response.statusCode == 200) {
+    return response.data as String;
+  } else {
+    return "Не удалось загрузить текст";
+  }
+}
 
 Future<int?> deleteQuestion(int id) async {
   var response = await dioFetch(
@@ -31,7 +46,8 @@ List<List<String>> formatSearch(String text) {
   }
 }
 
-Map<String, dynamic> searchBody(List<List<String>> sort,int startIndex,int? batchSize) {
+Map<String, dynamic> searchBody(
+    List<List<String>> sort, int startIndex, int? batchSize) {
   return {
     "draw": 0,
     "start": startIndex,
@@ -51,11 +67,13 @@ Map<String, dynamic> searchBody(List<List<String>> sort,int startIndex,int? batc
   };
 }
 
-Future<Album> createSearch(int startIndex,int batchSize ,{String searchText = ""}) async {
+Future<Album> createSearch(int startIndex, int batchSize,
+    {String searchText = ""}) async {
   print("Sending");
   var response = await dioFetch(
     method: "POST",
-    data: jsonEncode(searchBody(formatSearch(searchText),startIndex,batchSize)),
+    data:
+        jsonEncode(searchBody(formatSearch(searchText), startIndex, batchSize)),
     dirLink: '/Files/Table',
     headers: {
       "Authorization": curUser.key,
@@ -63,7 +81,7 @@ Future<Album> createSearch(int startIndex,int batchSize ,{String searchText = ""
   );
   if (response.statusCode == 200) {
     print("Recieved");
-    return Album.fromJson(response.data,startIndex,batchSize);
+    return Album.fromJson(response.data, startIndex, batchSize);
   } else {
     print("Failed");
     throw Exception('Failed to create Album');
