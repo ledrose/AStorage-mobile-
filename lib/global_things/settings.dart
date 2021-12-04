@@ -22,11 +22,11 @@ class DataSaver {
 
   static void loadUser() {
     String token = prefs!.getString("token") ?? "";
-    List<String> permissions = prefs!.getStringList("permissions") ?? [];
-    String name = prefs!.getString("name") ?? "";
     if (token == "") {
       curUser = User.empty();
     } else {
+      List<String> permissions = prefs!.getStringList("permissions") ?? [];
+      String name = prefs!.getString("name") ?? "";
       curUser = User.fromStorage(token, permissions, name);
     }
   }
@@ -44,13 +44,12 @@ class DataSaver {
   }
 
   static void loadTheme() {
-    currentTheme.value=prefs!.getInt("themeId")??0;
+    currentTheme.value = prefs!.getInt("themeId") ?? 0;
   }
-  
+
   static void saveTheme() {
     prefs!.setInt("themeId", currentTheme.value);
   }
-
 }
 
 class User {

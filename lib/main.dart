@@ -19,7 +19,7 @@ class _StartAppState extends State<StartApp> {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       DataSaver.initData().whenComplete(() => setState(() {
-            DataSaver.loadUser;
+            DataSaver.loadUser();
             DataSaver.loadTheme();
           }));
     });
