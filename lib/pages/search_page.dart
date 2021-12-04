@@ -4,6 +4,7 @@ import 'package:flutter_application_1/global_things/settings.dart';
 import 'package:flutter_application_1/http/image_getter.dart';
 import 'package:flutter_application_1/http/search.dart';
 import 'package:flutter_application_1/http/sender.dart';
+import 'package:flutter_application_1/pages/search_page_parts/image_viewer.dart';
 import '../global_things/base.dart';
 
 class SearchPage extends StatefulWidget {
@@ -199,14 +200,14 @@ class _SearchPageState extends State<SearchPage> {
           );
   }
 
-  Widget questionBlock(BuildContext context, Question q, Widget img) {
+  Widget questionBlock(BuildContext context, Question q, Image img) {
     return Card(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             alignment: Alignment.center,
-            child: img,
+            child: ImageViewer(img: img),
           ),
           (curUser.permissions.contains("GetLogs"))?buildImageTextBlock(q):const SizedBox(height: 10),
           ButtonBarTheme(
