@@ -17,18 +17,24 @@ class _StartAppState extends State<StartApp> {
   @override
   void initState() {
     super.initState();
-    DataSaver.initData().whenComplete(() => setState(DataSaver.loadUser));
-    currentTheme = ValueNotifier<ThemeData>(themeList[0]["theme"] as ThemeData);
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      DataSaver.initData().whenComplete(() => setState(() {
+            DataSaver.loadUser;
+            DataSaver.loadTheme();
+          }));
+    });
+    currentTheme = ValueNotifier<int>(0);
   }
+
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<ThemeData>(
+    return ValueListenableBuilder<int>(
       valueListenable: currentTheme,
-      builder: (context, curTheme, widget) {
+      builder: (context, curThemeId, widget) {
         return MaterialApp(
           title: 'AStorage',
           key: appKey,
-          theme: curTheme,
+          theme: themeList.entries.elementAt(curThemeId).value,
           home: const BaseWidget(),
         );
       },
