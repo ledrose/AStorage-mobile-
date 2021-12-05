@@ -181,7 +181,7 @@ class _SearchPageState extends State<SearchPage> {
                 case ConnectionState.waiting:
                   return const Card(
                     child: Center(
-                      child: CircularProgressIndicator(),
+                      child: LinearProgressIndicator(),
                     ),
                   );
                 case ConnectionState.done:
@@ -209,7 +209,9 @@ class _SearchPageState extends State<SearchPage> {
             alignment: Alignment.center,
             child: ImageViewer(img: img),
           ),
-          (curUser.permissions.contains("GetLogs"))?buildImageTextBlock(q):const SizedBox(height: 10),
+          (curUser.permissions.contains("GetLogs"))
+              ? buildImageTextBlock(q)
+              : const SizedBox(height: 10),
           ButtonBarTheme(
             data: const ButtonBarThemeData(),
             child: ButtonBar(
@@ -254,28 +256,30 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget buildImageTextBlock(Question q) {
-    return (q.imgText!=null)? Text( 
+    return (q.imgText != null)
+        ? Text(
             'Рассшифровка текста с картинки: ${q.imgText}',
             textAlign: TextAlign.start,
-          ):
-    FutureBuilder(
+          )
+        : FutureBuilder(
             future: getQuestionText(q.id),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
                   return const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2.0,),
+                    child: LinearProgressIndicator(),
                   );
                 case ConnectionState.done:
                   if (snapshot.hasError) {
                     return Text(
                         "Error has occured." + snapshot.error.toString());
                   } else {
-                    globalAlbum!.questions.firstWhere((e) => e==q).imgText=snapshot.data as String;
-                    return Text( 
-            'Рассшифровка текста с картинки: ${snapshot.data}',
-            textAlign: TextAlign.start,
-          );
+                    globalAlbum!.questions.firstWhere((e) => e == q).imgText =
+                        snapshot.data as String;
+                    return Text(
+                      'Рассшифровка текста с картинки: ${snapshot.data}',
+                      textAlign: TextAlign.start,
+                    );
                   }
                 default:
                   return Container();
@@ -401,11 +405,12 @@ class _SearchPageState extends State<SearchPage> {
               children: [
                 TextButton(
                   onPressed: () async {
-                    String responseString = await sendAnswer(id, _textController.value.text.trim());
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(responseString)));
-                      Navigator.of(context).pop();
-                    },
+                    String responseString =
+                        await sendAnswer(id, _textController.value.text.trim());
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(responseString)));
+                    Navigator.of(context).pop();
+                  },
                   child: const Text("Отправить ответ"),
                 ),
                 TextButton(

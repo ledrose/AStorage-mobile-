@@ -71,7 +71,7 @@ class _BaseWidgetState extends State<BaseWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ASApp'),
+        title: const Text('AStorage'),
       ),
       body: PageView(
         controller: _pageController,
