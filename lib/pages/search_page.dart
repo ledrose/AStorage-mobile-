@@ -17,7 +17,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   Album? globalAlbum;
   int _currentPage = 1;
-  final int _batchSize = 3;
+  final int _batchSize = batchSize;
   final TextEditingController _textController = TextEditingController();
 
   @override

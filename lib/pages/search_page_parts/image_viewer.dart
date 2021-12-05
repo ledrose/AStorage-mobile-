@@ -9,7 +9,6 @@ class ImageViewer extends StatefulWidget {
 }
 
 class _ImageViewerState extends State<ImageViewer> {
-  Animation<Matrix4>? animation;
   final double minScale = 1;
   final double maxScale = 4;
   double scale = 1;
@@ -19,6 +18,7 @@ class _ImageViewerState extends State<ImageViewer> {
   Widget build(BuildContext context) {
     return staticImage(context);
   }
+  
   void showOverlay(BuildContext context) {
     entry = OverlayEntry(
       builder: (context) {

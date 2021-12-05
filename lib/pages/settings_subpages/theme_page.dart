@@ -1,7 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/global_things/settings.dart';
 
-class ThemePage extends StatefulWidget {
+class ThemePage extends StatefulWidget {   //Not Used
   const ThemePage({Key? key}) : super(key: key);
 
   @override

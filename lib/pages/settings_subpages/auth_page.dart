@@ -16,15 +16,7 @@ class _AuthPageState extends State<AuthPage> {
   final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Войдите в аккаунт"),
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(50),
-        child: chooseLogWidget(),
-      ),
-    );
+    return chooseLogWidget();
   }
 
   Widget chooseLogWidget() {
@@ -130,6 +122,7 @@ class _AuthPageState extends State<AuthPage> {
               ),
             ),
           ),
+          const SizedBox(height: 10,),
         ],
       ),
     );
@@ -148,7 +141,7 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget loggedWidget() {
-    return ListView(
+    return Column(
       children: [
         Text("Вы вошли под именем ${curUser.name}"),
         ...permissionListWidgets(),

@@ -1,33 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/global_things/settings.dart';
 import 'package:flutter_application_1/pages/settings_subpages/auth_page.dart';
-import 'package:flutter_application_1/pages/settings_subpages/theme_page.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
 
-  static const settingsPageList = [
-    {"name": "Тема", "link": ThemePage()},
-    {"name": "Аунтефикация", "link": AuthPage()},
-  ];
+class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: settingsPageList.length,
-      itemBuilder: (context, index) {
-        var el = settingsPageList[index];
-        return Card(
-          child: ListTile(
-            title: Text(el["name"] as String),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => (el["link"] as Widget),
-                ),
-              );
-            },
+    return ListView(
+      children: [
+        const Card(
+          child: ExpansionTile(
+            title: Text("Аунтефикация"),
+            children: [
+              AuthPage(),
+            ],
           ),
-        );
-      },
+        ),
+        Card(
+          child: ListTile(
+            title: const Text("Тема"),
+            trailing: DropdownButton(
+                value: currentTheme.value,
+                onChanged: (int? newValue) => setState(() {
+                  currentTheme.value = newValue!;
+                  DataSaver.saveTheme();
+                }),
+                items: themeList.keys
+                    .map<DropdownMenuItem<int>>(
+                        (value) => DropdownMenuItem<int>(
+                              value: themeList.keys
+                                  .toList()
+                                  .indexWhere((element) => element == value),
+                              child: Text(value),
+                            ))
+                    .toList()),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: const Text("Количество вопросов на странице"),
+            trailing: DropdownButton(
+                value: batchSize,
+                onChanged: (int? newValue) => setState(() {
+                  batchSize=newValue!;
+                  DataSaver.saveBatchSize();
+                }),
+                items: List.generate(10, (index) => index+1)
+                    .map<DropdownMenuItem<int>>(
+                        (value) => DropdownMenuItem<int>(
+                              value: value,
+                              child: Text(value.toString()),
+                            ))
+                    .toList()),
+          ),
+        ),
+      ],
     );
   }
 }
