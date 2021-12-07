@@ -14,6 +14,18 @@ void showTextSnackBar(BuildContext context, String s) {
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
+Dio standartDio({
+  int timeout = 10000,
+  Map<String, dynamic>? headers,
+}) {
+  Dio dio = Dio();
+  dio.options.baseUrl = halfLink;
+  dio.options.connectTimeout = timeout;
+  dio.options.receiveTimeout = timeout;
+  dio.options.headers = headers;
+  return dio;
+}
+
 Future<Response<dynamic>> dioFetch({
   dynamic data,
   required String dirLink,
@@ -23,11 +35,7 @@ Future<Response<dynamic>> dioFetch({
   required String method,
   ResponseType responseType = ResponseType.json,
 }) async {
-  Dio dio = Dio();
-  dio.options.baseUrl = halfLink;
-  dio.options.connectTimeout = timeout;
-  dio.options.receiveTimeout = timeout;
-  dio.options.headers = headers;
+  Dio dio = standartDio(timeout: timeout,headers: headers);
   return await dio.fetch(
     RequestOptions(
       path: halfLink + dirLink,

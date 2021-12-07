@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/global_things/settings.dart';
 import 'package:flutter_application_1/pages/settings_subpages/auth_page.dart';
 
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
   @override
@@ -27,9 +28,9 @@ class _SettingsPageState extends State<SettingsPage> {
             trailing: DropdownButton(
                 value: currentTheme.value,
                 onChanged: (int? newValue) => setState(() {
-                  currentTheme.value = newValue!;
-                  DataSaver.saveTheme();
-                }),
+                      currentTheme.value = newValue!;
+                      DataSaver.saveTheme();
+                    }),
                 items: themeList.keys
                     .map<DropdownMenuItem<int>>(
                         (value) => DropdownMenuItem<int>(
@@ -47,10 +48,10 @@ class _SettingsPageState extends State<SettingsPage> {
             trailing: DropdownButton(
                 value: batchSize,
                 onChanged: (int? newValue) => setState(() {
-                  batchSize=newValue!;
-                  DataSaver.saveBatchSize();
-                }),
-                items: List.generate(10, (index) => index+1)
+                      batchSize = newValue!;
+                      DataSaver.saveBatchSize();
+                    }),
+                items: List.generate(10, (index) => index + 1)
                     .map<DropdownMenuItem<int>>(
                         (value) => DropdownMenuItem<int>(
                               value: value,
@@ -59,6 +60,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     .toList()),
           ),
         ),
+        (curUser.permissions.contains("GetLogs"))?Card(
+          child: ListTile(
+            title: const Text("Логи"),
+            onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("У вас нету прав на эту операцию")));
+            },
+          ),
+        ):Container(),
       ],
     );
   }
