@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/global_things/settings.dart';
 import 'package:flutter_application_1/pages/settings_subpages/auth_page.dart';
 
+import 'settings_subpages/logs_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -60,14 +61,19 @@ class _SettingsPageState extends State<SettingsPage> {
                     .toList()),
           ),
         ),
-        (curUser.permissions.contains("GetLogs"))?Card(
+        Card(
           child: ListTile(
             title: const Text("Логи"),
             onTap: () {
+              if (curUser.permissions.contains("GetLogs")) {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const LogsPage()));
+              }
+              else {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("У вас нету прав на эту операцию")));
+              }
             },
           ),
-        ):Container(),
+        )
       ],
     );
   }

@@ -10,6 +10,7 @@ class LogsPage extends StatefulWidget {
 }
 
 class _LogsPageState extends State<LogsPage> {
+  bool _isButtonPressed = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,11 +51,22 @@ class _LogsPageState extends State<LogsPage> {
         children: [
           ...logsName.map((e) => ListTile(
                 title: Text(e),
-                onTap: () async {
-                  String curLogText = await getLog(e);
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => LogView(logText: curLogText,logName: e,)));
-                },
+                onTap: (_isButtonPressed)
+                    ? null
+                    : () async {
+                        setState(() {
+                          _isButtonPressed = true;
+                        });
+                        String curLogText = await getLog(e);
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => LogView(
+                                  logText: curLogText,
+                                  logName: e,
+                                )));
+                        setState(() {
+                          _isButtonPressed = false;
+                        });
+                      },
               ))
         ],
       ),

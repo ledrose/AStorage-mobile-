@@ -30,10 +30,8 @@ Future<Question> sendImageDio(XFile file) async {
     },
   );
   if (response.statusCode == 200) {
-    print("Recieved");
     return Question.fromJson(response.data);
   } else {
-    print("Failed");
     return Question.error("Ошибка:" + response.data.toString());
   }
 }

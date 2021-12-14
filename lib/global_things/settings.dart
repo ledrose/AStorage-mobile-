@@ -98,7 +98,7 @@ class User {
       id = response.data["id"];
       name = response.data["name"];
     } else {
-      print(response.statusMessage);
+      throw Exception(response.statusCode);
     }
   }
 

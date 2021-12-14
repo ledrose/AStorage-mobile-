@@ -44,8 +44,9 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget searchBar() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20.0),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width*0.9,
+      // margin: const EdgeInsets.symmetric(horizontal: 5.0),
       child: Form(
         child: TextFormField(
           controller: _textController,
@@ -124,7 +125,7 @@ class _SearchPageState extends State<SearchPage> {
               return const Text("...");
             } else {
               return SizedBox(
-                width: 30,
+                width: 40,
                 child: TextButton(
                   onPressed: (_currentPage == e)
                       ? null
@@ -220,6 +221,9 @@ class _SearchPageState extends State<SearchPage> {
                 IconButton(
                   onPressed: () async {
                     if (curUser.permissions.contains("DeleteFiles")) {
+                      setState(() {
+                        
+                      });
                       if (await deleteQuestion(q.id) == 200) {
                         setState(() {
                           globalAlbum!.questions.remove(q);

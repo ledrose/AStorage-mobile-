@@ -69,7 +69,6 @@ Map<String, dynamic> searchBody(
 
 Future<Album> createSearch(int startIndex, int batchSize,
     {String searchText = ""}) async {
-  print("Sending");
   var response = await dioFetch(
     method: "POST",
     data:
@@ -80,10 +79,8 @@ Future<Album> createSearch(int startIndex, int batchSize,
     },
   );
   if (response.statusCode == 200) {
-    print("Recieved");
     return Album.fromJson(response.data, startIndex, batchSize);
   } else {
-    print("Failed");
     throw Exception('Failed to create Album');
   }
 }

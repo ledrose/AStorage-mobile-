@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 String version = '1.0';
 String baseUrl = "https://bfs-astorage.somee.com";
 String halfLink = '$baseUrl/api/v$version';
-var scafState = ScaffoldMessengerState();
 
 void showTextSnackBar(BuildContext context, String s) {
   var snackBar = SnackBar(

@@ -33,6 +33,7 @@ class _StartAppState extends State<StartApp> {
       builder: (context, curThemeId, widget) {
         return MaterialApp(
           title: 'AStorage',
+          debugShowCheckedModeBanner: false,
           key: appKey,
           theme: themeList.entries.elementAt(curThemeId).value,
           home: const BaseWidget(),
@@ -53,15 +54,16 @@ class _BaseWidgetState extends State<BaseWidget> {
   final _bottomNavigationBar = [
     const BottomNavigationBarItem(
       icon: Icon(Icons.home),
-      label: "Send",
+      label: "Отправка",
     ),
     const BottomNavigationBarItem(
       icon: Icon(Icons.comment),
-      label: "Search",
+      label: "Поиск",
     ),
     const BottomNavigationBarItem(
+      
       icon: Icon(Icons.settings),
-      label: "Settings",
+      label: "Настройки",
     ),
   ];
 
@@ -87,6 +89,8 @@ class _BaseWidgetState extends State<BaseWidget> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        // showSelectedLabels: false,
+        // showUnselectedLabels: false,
         items: _bottomNavigationBar,
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class LogView extends StatelessWidget {
-  String logText;
-  String logName;
-  LogView({required this.logText, required this.logName, Key? key})
+  final String logText;
+  final String logName;
+  const LogView({required this.logText, required this.logName, Key? key})
       : super(key: key);
 
   @override
