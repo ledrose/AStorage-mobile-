@@ -16,7 +16,6 @@ class DataSaver {
   static Future<void> initData() async {
     prefs = await SharedPreferences.getInstance();
   }
-
   static void loadUser() {
     String token = prefs!.getString("token") ?? "";
     if (token == "") {
@@ -27,28 +26,23 @@ class DataSaver {
       curUser = User.fromStorage(token, permissions, name);
     }
   }
-
   static void saveUser() {
     prefs!.setString("token", curUser.key);
     prefs!.setString("name", curUser.name ?? "");
     prefs!.setStringList("permissions", curUser.permissions);
   }
-
   static void removeUser() {
     prefs!.remove("token");
     prefs!.remove("permissions");
     prefs!.remove("name");
   }
-
   static void loadAppData() {
     currentTheme.value = prefs!.getInt("themeId") ?? 0;
     batchSize = prefs!.getInt("batchSize") ?? 5;
   }
-
   static void saveTheme() {
     prefs!.setInt("themeId", currentTheme.value);
   }
-
   static void saveBatchSize() {
     prefs!.setInt("batchSize", batchSize);
   }
@@ -117,6 +111,6 @@ class User {
       for (var e in data) {
         permissions.add(e["permission"]);
       }
-    } else {}
+    } 
   }
 }

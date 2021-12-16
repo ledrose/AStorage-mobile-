@@ -26,44 +26,28 @@ class _SendFormState extends State<SendForm> {
   final TextEditingController _controller = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   bool _isButtonDisabled = false;
-  
+
   void _sendFile() async {
     if (_imageFile == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("You did not choose an image")));
+      showTextSnackBar(context, "Вы не выбрали изображение");
     } else {
-      if (_imageFile == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Файл-картинка равна null")));
-      } else {
-        setState(() {
-          _isButtonDisabled = true;
-        });
-        Question q = await sendImageDio(_imageFile!).then((q) => q);
-        if (q.error == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Картинка отправлена")));
-          if (_controller.value.text.trim() != "") {
-            String responseString=await sendAnswer(q.id, _controller.value.text);
-            // if (==200) {
-              ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(responseString)));
-              
-            // }
-            // else {
-            //   ScaffoldMessenger.of(context)
-            //     .showSnackBar(const SnackBar(content: Text("Ошибка при добавлении ответа")));
-            // }
-            
-          }
-        } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(q.error!)));
+      setState(() {
+        _isButtonDisabled = true;
+      });
+      Question q = await sendImageDio(_imageFile!);
+      if (q.error == null) {
+        showTextSnackBar(context, "Картинка отправлена");
+        if (_controller.value.text.trim() != "") {
+          String responseString =
+              await sendAnswer(q.id, _controller.value.text);
+          showTextSnackBar(context, responseString);
         }
-        setState(() {
-          _isButtonDisabled = false;
-        });
+      } else {
+        showTextSnackBar(context, q.error!);
       }
+      setState(() {
+        _isButtonDisabled = false;
+      });
     }
   }
 
@@ -77,7 +61,9 @@ class _SendFormState extends State<SendForm> {
         ),
         TextField(
           controller: _controller,
-          decoration: const InputDecoration(border: OutlineInputBorder(), hintText: "Введите ответ, если хотите"),
+          decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: "Введите ответ, если хотите"),
         ),
         ElevatedButton(
           onPressed: (_isButtonDisabled) ? null : _sendFile,
